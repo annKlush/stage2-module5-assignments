@@ -60,9 +60,4 @@ public class LocalProcessor {
         }
         processorVersion = builder.toString();
     }
-
-    // Additional method for your catchTest
-    public void throwIllegalStateException() {
-        throw new IllegalStateException("This is an IllegalStateException");
-    }
 }
