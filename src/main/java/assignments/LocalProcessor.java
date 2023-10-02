@@ -3,24 +3,36 @@ package assignments;
 import assignments.annotations.FullNameProcessorGeneratorAnnotation;
 import assignments.annotations.ListIteratorAnnotation;
 import assignments.annotations.ReadFullProcessorNameAnnotation;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@Getter
+@Setter
 public class LocalProcessor {
+    private static final Logger logger = Logger.getLogger(LocalProcessor.class.getName());
+
     private String processorName;
     private final Long period;
     private String processorVersion;
+    private Integer valueOfCheap;
     private Scanner informationScanner;
+    private LinkedList<String> stringArrayList;
 
-    public LocalProcessor(String processorName, Long period, String processorVersion,
-                          Scanner informationScanner) {
+    public LocalProcessor(String processorName, Long period, String processorVersion, Integer valueOfCheap,
+                          Scanner informationScanner, LinkedList<String> stringArrayList) {
         this.processorName = processorName;
         this.period = period;
         this.processorVersion = processorVersion;
+        this.valueOfCheap = valueOfCheap;
         this.informationScanner = informationScanner;
+        this.stringArrayList = stringArrayList;
     }
 
     public LocalProcessor() {
@@ -29,11 +41,9 @@ public class LocalProcessor {
 
     @ListIteratorAnnotation
     public void listIterator(LinkedList<String> stringList) {
-        LinkedList<String> stringArrayList = new LinkedList<>(stringList); // Convert to local variable
+        LinkedList<String> localList = new LinkedList<>(stringList);
         for (int i = 0; i < period; i++) {
-            if (i < stringArrayList.size()) {
-                System.out.println(stringArrayList.get(i).hashCode());
-            }
+            logger.log(Level.INFO, "Hash code: {0}", localList.get(i).hashCode());
         }
     }
 
@@ -48,12 +58,11 @@ public class LocalProcessor {
 
     @ReadFullProcessorNameAnnotation
     public void readFullProcessorName(File file) throws FileNotFoundException {
-        Scanner informationScanner = new Scanner(file); // Convert to local variable
+        informationScanner = new Scanner(file);
         StringBuilder fullProcessorVersion = new StringBuilder(processorVersion);
-        while (informationScanner.hasNextLine()) {
+        while (informationScanner.hasNext()) {
             fullProcessorVersion.append(informationScanner.nextLine());
         }
         processorVersion = fullProcessorVersion.toString();
-        informationScanner.close(); // Close the local Scanner variable when done
     }
 }
