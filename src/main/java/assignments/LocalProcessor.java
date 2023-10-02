@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.lang.StringBuilder;
+import java.util.logging.Logger; // Import the Logger class
+import java.util.stream.Collectors;
 
 import assignments.annotations.FullNameProcessorGeneratorAnnotation;
 import assignments.annotations.ListIteratorAnnotation;
@@ -17,17 +18,18 @@ import lombok.Setter;
 @Setter
 public class LocalProcessor {
     private String processorName;
-    private Long period = 10_000_000_000_000L;
+    private final Long period = 10_000_000_000_000L; // Set the period as final
     private String processorVersion;
     private Integer valueOfCheap;
     private Scanner informationScanner;
-    private static List<String> stringArrayList = new ArrayList<>();
-    private StringBuilder stringBuilder = new StringBuilder(); // Add a StringBuilder variable
+    private static List<String> stringArrayList = new ArrayList<>(); // Change to a static reference
 
-    public LocalProcessor(String processorName, Long period, String processorVersion, Integer valueOfCheap,
+    // Create a Logger instance
+    private static final Logger logger = Logger.getLogger(LocalProcessor.class.getName());
+
+    public LocalProcessor(String processorName, String processorVersion, Integer valueOfCheap,
                           Scanner informationScanner, List<String> stringList) {
         this.processorName = processorName;
-        this.period = period;
         this.processorVersion = processorVersion;
         this.valueOfCheap = valueOfCheap;
         this.informationScanner = informationScanner;
@@ -39,27 +41,28 @@ public class LocalProcessor {
 
     @ListIteratorAnnotation
     public void listIterator(List<String> stringList) {
-        for (String str : stringList) {
-            System.out.println(str.hashCode());
-        }
+        // Use a logger to print hash codes
+        stringList.forEach(str -> logger.info("Hash code: " + str.hashCode()));
     }
 
     @FullNameProcessorGeneratorAnnotation
     public String fullNameProcessorGenerator(List<String> stringList) {
-        StringBuilder fullName = new StringBuilder(processorName);
-        for (String str : stringList) {
-            fullName.append(str).append(' ');
-        }
-        return fullName.toString();
+        // Use Java Streams to concatenate strings
+        return stringList.stream().collect(Collectors.joining(" ", processorName + " ", ""));
     }
 
     @ReadFullProcessorNameAnnotation
     public void readFullProcessorName(File file) throws FileNotFoundException {
         informationScanner = new Scanner(file);
+        StringBuilder builder = new StringBuilder();
         while (informationScanner.hasNextLine()) {
-            stringBuilder.append(informationScanner.nextLine()); // Use the StringBuilder here
+            builder.append(informationScanner.nextLine());
         }
+        processorVersion = builder.toString();
+    }
 
-        processorVersion = stringBuilder.toString(); // Update the processorVersion
+    // Additional method for your catchTest
+    public void throwIllegalStateException() {
+        throw new IllegalStateException("This is an IllegalStateException");
     }
 }
