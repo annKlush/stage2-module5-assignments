@@ -13,18 +13,14 @@ public class LocalProcessor {
     private String processorName;
     private final Long period;
     private String processorVersion;
-    private Integer valueOfCheap;
     private Scanner informationScanner;
-    private LinkedList<String> stringArrayList;
 
-    public LocalProcessor(String processorName, Long period, String processorVersion, Integer valueOfCheap,
-                          Scanner informationScanner, LinkedList<String> stringArrayList) {
+    public LocalProcessor(String processorName, Long period, String processorVersion,
+                          Scanner informationScanner) {
         this.processorName = processorName;
         this.period = period;
         this.processorVersion = processorVersion;
-        this.valueOfCheap = valueOfCheap;
         this.informationScanner = informationScanner;
-        this.stringArrayList = stringArrayList;
     }
 
     public LocalProcessor() {
@@ -33,10 +29,10 @@ public class LocalProcessor {
 
     @ListIteratorAnnotation
     public void listIterator(LinkedList<String> stringList) {
-        LinkedList<String> localList = new LinkedList<>(stringList);
+        LinkedList<String> stringArrayList = new LinkedList<>(stringList); // Convert to local variable
         for (int i = 0; i < period; i++) {
-            if (i < localList.size()) {
-                System.out.println(localList.get(i).hashCode());
+            if (i < stringArrayList.size()) {
+                System.out.println(stringArrayList.get(i).hashCode());
             }
         }
     }
@@ -52,11 +48,12 @@ public class LocalProcessor {
 
     @ReadFullProcessorNameAnnotation
     public void readFullProcessorName(File file) throws FileNotFoundException {
-        informationScanner = new Scanner(file);
+        Scanner informationScanner = new Scanner(file); // Convert to local variable
         StringBuilder fullProcessorVersion = new StringBuilder(processorVersion);
         while (informationScanner.hasNextLine()) {
             fullProcessorVersion.append(informationScanner.nextLine());
         }
         processorVersion = fullProcessorVersion.toString();
+        informationScanner.close(); // Close the local Scanner variable when done
     }
 }
