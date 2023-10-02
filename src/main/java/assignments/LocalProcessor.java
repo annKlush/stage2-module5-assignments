@@ -3,16 +3,12 @@ package assignments;
 import assignments.annotations.FullNameProcessorGeneratorAnnotation;
 import assignments.annotations.ListIteratorAnnotation;
 import assignments.annotations.ReadFullProcessorNameAnnotation;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-@Getter
-@Setter
 public class LocalProcessor {
     private String processorName;
     private final Long period;
@@ -39,7 +35,9 @@ public class LocalProcessor {
     public void listIterator(LinkedList<String> stringList) {
         LinkedList<String> localList = new LinkedList<>(stringList);
         for (int i = 0; i < period; i++) {
-            System.out.println(localList.get(i).hashCode());
+            if (i < localList.size()) {
+                System.out.println(localList.get(i).hashCode());
+            }
         }
     }
 
@@ -56,7 +54,7 @@ public class LocalProcessor {
     public void readFullProcessorName(File file) throws FileNotFoundException {
         informationScanner = new Scanner(file);
         StringBuilder fullProcessorVersion = new StringBuilder(processorVersion);
-        while (informationScanner.hasNext()) {
+        while (informationScanner.hasNextLine()) {
             fullProcessorVersion.append(informationScanner.nextLine());
         }
         processorVersion = fullProcessorVersion.toString();
